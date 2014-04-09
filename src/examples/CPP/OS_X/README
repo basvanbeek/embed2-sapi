@@ -1,0 +1,10 @@
+To build you need:
+- compiled boost library: boost::thread (www.boost.org)
+- compiled php embed2 sapi
+
+since boost names it's libraries using it's version number and used compiler 
+you probably have to change the makefile to your libboost_thread???? library.
+
+You probably only need to alter the BOOST_COMPILER var 
+
+This one is set to xgcc40 to link to libboost_thread_xgcc40-mt (GCC on Mac OS X)

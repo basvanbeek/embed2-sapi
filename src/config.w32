@@ -1,0 +1,6 @@
+
+ARG_ENABLE('embed2', 'Embed2 SAPI library', 'no');
+
+if (PHP_EMBED2 != "no") {
+	SAPI('embed2', 'php_embed2.c', 'php' + PHP_VERSION + 'embed2.lib');
+}
