@@ -1,8 +1,7 @@
 EMBED2 SAPI README 
 ==================
 
-Why another embedded library?
-
+#### Why another embedded library?
 The original embedded library is fine if your goal is to add limited PHP scripting support
 to your application when the amount of PHP script runs remains small and you do not
 need concurrent script runs (in multi-threaded applications). If you need to use embedded
@@ -11,8 +10,7 @@ runs or you wish to manipulate INI settings which fall under the category PHP_IN
 or PHP_INI_PERDIR you will need the EMBED2 SAPI module.
 
 
-How do I run concurrent scripts in multi-threaded mode?
-
+#### How do I run concurrent scripts in multi-threaded mode?
 Typically you request the php environment to startup at program startup by invoking
 php_embed2_init(). In each thread function request a thread safe resource identifier
 by invoking TSRMLS_FETCH(). If you call other functions from
@@ -25,8 +23,7 @@ script globals to cross the function calls. On application shutdown you must hav
 down the php environment using on of the php_embed2_shutdown* functions.
 
 
-I'm not using threads in my application, why should I use this library?
-
+#### I'm not using threads in my application, why should I use this library?
 Efficiency! With the embed2 library you can have multiple separate requests / script runs
 without the need of initializing and shutting down the entire PHP environment. The original
 embedded library functions the same way as a CLI environment as for each script run the 
@@ -47,16 +44,16 @@ once and for each script run only the following happens:
 - php request shutdown
 
 
-What else is different?
-
+#### What else is different?
 The embed2 library allows you to:
 - select an alternate php.ini configuration file
 - select where php output and error output should go (stdout, file, callback or char*) 
 - easy install userland callback function without needing to write an extension module
 - execute php scripts from char* using internal memory_stream handler for zend
 - use embed2:// stream combined with callback function to implement embedded/on-the-fly-generated script retrieval
-	
-Possible Future enhancements?
+
+
+#### Possible Future enhancements?
 - easy setup of ini arguments before engine start
 - per thread configuration of easy callback function (so it can be changed on the fly even within request space)
 - ...
