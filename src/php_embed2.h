@@ -136,7 +136,7 @@ EMBED2_SAPI_API char* php_embed2_get_log(size_t* len TSRMLS_DC);
 
 
 /* forward declarations of the embed2 modules */
-extern EMBED_SAPI_API sapi_module_struct php_embed2_module;
+extern EMBED2_SAPI_API sapi_module_struct php_embed2_module;
 extern  zend_module_entry  embed2_module_entry;
 #define phpext_embed2_ptr  &embed2_module_entry
 
