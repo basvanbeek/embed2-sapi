@@ -491,7 +491,7 @@ zend_module_entry embed2_module_entry  = {
  * _______________________________________________________________________________________________________________
  */
 
-int php_embed2_set_input_callback(char* (*fetchembeddedfile)(char* identifier, size_t* str_length TSRMLS_DC), zend_bool free_on_close) {
+EMBED2_SAPI_API int php_embed2_set_input_callback(char* (*fetchembeddedfile)(char* identifier, size_t* str_length TSRMLS_DC), zend_bool free_on_close) {
 	if (php_embed2_vars.module_init || fetchembeddedfile == NULL) {
 		return FAILURE;
 	}
@@ -504,7 +504,7 @@ int php_embed2_set_input_callback(char* (*fetchembeddedfile)(char* identifier, s
 	return SUCCESS;
 }
 
-int php_embed2_set_output_stdout(void) {
+EMBED2_SAPI_API int php_embed2_set_output_stdout(void) {
 	if (php_embed2_vars.module_init) {
 		return FAILURE;
 	}
@@ -519,7 +519,7 @@ int php_embed2_set_output_stdout(void) {
 	return SUCCESS;
 }
 
-int php_embed2_set_output_file(const char* filepath) {
+EMBED2_SAPI_API int php_embed2_set_output_file(const char* filepath) {
 	if (php_embed2_vars.module_init || filepath == NULL) {
 		return FAILURE;
 	}
@@ -542,7 +542,7 @@ int php_embed2_set_output_file(const char* filepath) {
 	return SUCCESS;
 }
 
-int php_embed2_set_output_callback(int (*fnwrite)(const char *str, unsigned int str_length TSRMLS_DC)) {
+EMBED2_SAPI_API int php_embed2_set_output_callback(int (*fnwrite)(const char *str, unsigned int str_length TSRMLS_DC)) {
 	if (php_embed2_vars.module_init || fnwrite == NULL) {
 		return FAILURE;
 	}
@@ -552,7 +552,7 @@ int php_embed2_set_output_callback(int (*fnwrite)(const char *str, unsigned int 
 	return SUCCESS;
 }
 
-int php_embed2_set_output_pchar(void) {
+EMBED2_SAPI_API int php_embed2_set_output_pchar(void) {
 	if (php_embed2_vars.module_init) {
 		return FAILURE;
 	}
@@ -563,7 +563,7 @@ int php_embed2_set_output_pchar(void) {
 }
 
 
-int php_embed2_set_log_stderr(void) {
+EMBED2_SAPI_API int php_embed2_set_log_stderr(void) {
 	if (php_embed2_vars.module_init) {
 		return FAILURE;
 	}
@@ -573,7 +573,7 @@ int php_embed2_set_log_stderr(void) {
 	return SUCCESS;
 
 }
-int php_embed2_set_log_file(const char* filepath) {
+EMBED2_SAPI_API int php_embed2_set_log_file(const char* filepath) {
 	if (php_embed2_vars.module_init || filepath == NULL) {
 		return FAILURE;
 	}
@@ -587,7 +587,7 @@ int php_embed2_set_log_file(const char* filepath) {
 
 }
 
-int php_embed2_set_log_callback(void (*fnwrite)(char *message TSRMLS_DC)) {
+EMBED2_SAPI_API int php_embed2_set_log_callback(void (*fnwrite)(char *message TSRMLS_DC)) {
 	if (php_embed2_vars.module_init || fnwrite == NULL) {
 		return FAILURE;
 	}
@@ -601,7 +601,7 @@ int php_embed2_set_log_callback(void (*fnwrite)(char *message TSRMLS_DC)) {
 	return SUCCESS;
 }
 
-int php_embed2_set_log_pchar(void) {
+EMBED2_SAPI_API int php_embed2_set_log_pchar(void) {
 	if (php_embed2_vars.module_init) {
 		return FAILURE;
 	}
@@ -610,7 +610,7 @@ int php_embed2_set_log_pchar(void) {
 	return SUCCESS;
 }
 
-int php_embed2_set_ini_path(char* ini_path) {
+EMBED2_SAPI_API int php_embed2_set_ini_path(char* ini_path) {
 	if (php_embed2_vars.module_init || ini_path == NULL) {
 		return FAILURE;
 	}
@@ -620,7 +620,7 @@ int php_embed2_set_ini_path(char* ini_path) {
 }
 
 
-int php_embed2_set_default_arguments(int argc, char** argv) {
+EMBED2_SAPI_API int php_embed2_set_default_arguments(int argc, char** argv) {
 	if (php_embed2_vars.module_init || argc < 1 || argv == NULL || *argv == NULL) {
 		return FAILURE;
 	}
@@ -630,15 +630,7 @@ int php_embed2_set_default_arguments(int argc, char** argv) {
 	return SUCCESS;
 }
 
-int php_embed2_set_userland_callback(void (*ulcb)(INTERNAL_FUNCTION_PARAMETERS)) {
-	if (php_embed2_vars.module_init) {
-		return FAILURE;
-	}
-	php_embed2_vars.userlandcallback = ulcb;
-	return SUCCESS;
-}
-
-int php_embed2_expected_threadcount(unsigned int count) {
+EMBED2_SAPI_API int php_embed2_expected_threadcount(unsigned int count) {
 	if (php_embed2_vars.module_init || count < 1 || count > PHP_EMBED2_MAX_THREADS) {
 		return FAILURE;
 	}
@@ -646,7 +638,7 @@ int php_embed2_expected_threadcount(unsigned int count) {
 	return SUCCESS;
 }
 
-int php_embed2_expected_resourcecount(unsigned int count) {
+EMBED2_SAPI_API int php_embed2_expected_resourcecount(unsigned int count) {
 	if (php_embed2_vars.module_init || count < 1 || count > PHP_EMBED2_MAX_RESOURCES) {
 		return FAILURE;
 	}
@@ -654,7 +646,15 @@ int php_embed2_expected_resourcecount(unsigned int count) {
 	return SUCCESS;
 }
 
-int php_embed2_init(void) {
+EMBED2_SAPI_API int php_embed2_set_userland_callback(void (*ulcb)(INTERNAL_FUNCTION_PARAMETERS)) {
+	if (php_embed2_vars.module_init) {
+		return FAILURE;
+	}
+	php_embed2_vars.userlandcallback = ulcb;
+	return SUCCESS;
+}
+
+EMBED2_SAPI_API int php_embed2_init(void) {
 
 	if (php_embed2_vars.output_type == OT_STDFD) {
 		/* make sure these are set */
@@ -723,11 +723,11 @@ int php_embed2_init(void) {
 	return SUCCESS;
 }
 
-int php_embed2_req_init(TSRMLS_D) {
+EMBED2_SAPI_API int php_embed2_req_init(TSRMLS_D) {
 	return php_embed2_req_init_with_args(php_embed2_vars.argc, php_embed2_vars.argv, "embed2" TSRMLS_CC);
 }
 
-int php_embed2_req_init_with_args(int argc, char** argv, char* name TSRMLS_DC) {
+EMBED2_SAPI_API int php_embed2_req_init_with_args(int argc, char** argv, char* name TSRMLS_DC) {
 	if (argc > 0) {
 		SG(request_info).argc = argc;
 		SG(request_info).argv = argv;
@@ -745,7 +745,7 @@ int php_embed2_req_init_with_args(int argc, char** argv, char* name TSRMLS_DC) {
 	return SUCCESS;
 }
 
-int php_embed2_exec_fp(FILE* fp, char* runname TSRMLS_DC) {
+EMBED2_SAPI_API int php_embed2_exec_fp(FILE* fp, char* runname TSRMLS_DC) {
 	zend_file_handle zhnd;
 	zhnd.type = ZEND_HANDLE_FP;
 	zhnd.filename = runname;
@@ -754,7 +754,7 @@ int php_embed2_exec_fp(FILE* fp, char* runname TSRMLS_DC) {
 	return php_execute_script(&zhnd TSRMLS_CC);
 }
 
-int php_embed2_exec_path(char* filepath TSRMLS_DC) {
+EMBED2_SAPI_API int php_embed2_exec_path(char* filepath TSRMLS_DC) {
 	zend_file_handle zhnd;
 	zhnd.type = ZEND_HANDLE_FP;
 	zhnd.filename = filepath;
@@ -766,11 +766,11 @@ int php_embed2_exec_path(char* filepath TSRMLS_DC) {
 	return php_execute_script(&zhnd TSRMLS_CC);
 }
 
-int php_embed2_exec_zhnd(zend_file_handle* zhnd TSRMLS_DC) {
+EMBED2_SAPI_API int php_embed2_exec_zhnd(zend_file_handle* zhnd TSRMLS_DC) {
 	return php_execute_script(zhnd TSRMLS_CC);
 }
 
-int php_embed2_exec_str(char* script, char* runname TSRMLS_DC) {
+EMBED2_SAPI_API int php_embed2_exec_str(char* script, char* runname TSRMLS_DC) {
 	zend_file_handle zhnd;
 	zhnd.type = ZEND_HANDLE_STREAM;
 	zhnd.filename = runname;
@@ -789,7 +789,7 @@ int php_embed2_exec_str(char* script, char* runname TSRMLS_DC) {
 	return php_execute_script(&zhnd TSRMLS_CC);
 }
 
-int php_embed2_exec_cmd(char* command, zval* return_value, char* runname TSRMLS_DC) {
+EMBED2_SAPI_API int php_embed2_exec_cmd(char* command, zval* return_value, char* runname TSRMLS_DC) {
 	if (command == NULL) {
 		return FAILURE;
 	}
@@ -800,16 +800,16 @@ int php_embed2_exec_cmd(char* command, zval* return_value, char* runname TSRMLS_
 	}
 }
 
-void php_embed2_req_shutdown() {
+EMBED2_SAPI_API void php_embed2_req_shutdown() {
 	php_request_shutdown(NULL);
 }
 
-void php_embed2_shutdown() {
+EMBED2_SAPI_API void php_embed2_shutdown() {
 	TSRMLS_FETCH();
 	php_embed2_shutdown_ex(TSRMLS_C);
 }
 
-void php_embed2_shutdown_ex(TSRMLS_D) {
+EMBED2_SAPI_API void php_embed2_shutdown_ex(TSRMLS_D) {
 	#ifndef ZTS
 		php_embed2_globals_dtor(&embed2_globals TSRMLS_CC);
 	#endif
@@ -840,7 +840,7 @@ void php_embed2_shutdown_ex(TSRMLS_D) {
 	php_embed2_vars.module_init = 0;
 }
 
-char* php_embed2_get_output(size_t* len TSRMLS_DC) {
+EMBED2_SAPI_API char* php_embed2_get_output(size_t* len TSRMLS_DC) {
 	char* result;
 	smart_str* str = EMBED2_G(output);
 	if (str == NULL || str->c == NULL) {
@@ -859,7 +859,7 @@ char* php_embed2_get_output(size_t* len TSRMLS_DC) {
 	return result;
 }
 
-char* php_embed2_get_log(size_t* len TSRMLS_DC) {
+EMBED2_SAPI_API char* php_embed2_get_log(size_t* len TSRMLS_DC) {
 	char* result;
 	smart_str* str = EMBED2_G(log);
 	if (str == NULL || str->c == NULL) {

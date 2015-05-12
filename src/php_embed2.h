@@ -29,7 +29,13 @@
 #include <zend_ini.h>
 
 #define EMBED2_NAME    "Embed2 PHP SAPI Library"
-#define EMBED2_VERSION "1.0"
+#define EMBED2_VERSION "1.1"
+
+#ifndef PHP_WIN32
+	#define EMBED2_SAPI_API SAPI_API
+#else
+	#define EMBED2_SAPI_API
+#endif
 
 /**
  * EASY WRAPPER FUNCTIONS
@@ -73,64 +79,64 @@
 BEGIN_EXTERN_C()
 /* pre startup initialization */
 
-int php_embed2_set_input_callback(char* (*fetchembeddedfile)(char* identifier, size_t* str_length TSRMLS_DC), zend_bool free_pchar_on_close);
+EMBED2_SAPI_API int php_embed2_set_input_callback(char* (*fetchembeddedfile)(char* identifier, size_t* str_length TSRMLS_DC), zend_bool free_pchar_on_close);
 
 /* functions to set output mode */
-int php_embed2_set_output_stdout(void);
-int php_embed2_set_output_file(const char* filepath);
-int php_embed2_set_output_callback(int (*fnwrite)(const char *str, unsigned int str_length TSRMLS_DC));
+EMBED2_SAPI_API int php_embed2_set_output_stdout(void);
+EMBED2_SAPI_API int php_embed2_set_output_file(const char* filepath);
+EMBED2_SAPI_API int php_embed2_set_output_callback(int (*fnwrite)(const char *str, unsigned int str_length TSRMLS_DC));
 /* use in combination with php_embed2_get_output */
-int php_embed2_set_output_pchar(void);
+EMBED2_SAPI_API int php_embed2_set_output_pchar(void);
 
-int php_embed2_set_log_stderr(void);
-int php_embed2_set_log_file(const char* filepath);
-int php_embed2_set_log_callback(void (*fnwrite)(char *message TSRMLS_DC));
+EMBED2_SAPI_API int php_embed2_set_log_stderr(void);
+EMBED2_SAPI_API int php_embed2_set_log_file(const char* filepath);
+EMBED2_SAPI_API int php_embed2_set_log_callback(void (*fnwrite)(char *message TSRMLS_DC));
 /* use in combination with php_embed2_get_log */
-int php_embed2_set_log_pchar(void);
+EMBED2_SAPI_API int php_embed2_set_log_pchar(void);
 
-int php_embed2_set_ini_path(char* ini_path);
+EMBED2_SAPI_API int php_embed2_set_ini_path(char* ini_path);
 /* set default arguments in case one uses php_embed2_reg_init over php_embed2_reg_init_with_args */
-int php_embed2_set_default_arguments(int argc, char** argv);
-int php_embed2_expected_threadcount(unsigned int count);
-int php_embed2_expected_resourcecount(unsigned int count);
+EMBED2_SAPI_API int php_embed2_set_default_arguments(int argc, char** argv);
+EMBED2_SAPI_API int php_embed2_expected_threadcount(unsigned int count);
+EMBED2_SAPI_API int php_embed2_expected_resourcecount(unsigned int count);
 
 /*
  *  simple application callback for php userland code...
  *  for more advanced interaction it's better to write your own extension module
  */
-int php_embed2_set_userland_callback(void (*ulcb)(INTERNAL_FUNCTION_PARAMETERS));
+EMBED2_SAPI_API int php_embed2_set_userland_callback(void (*ulcb)(INTERNAL_FUNCTION_PARAMETERS));
 
 /* startup PHP environment */
-int php_embed2_init();
+EMBED2_SAPI_API int php_embed2_init();
 
 /* start request environment using argc/argv from php_embed2_set_default_arguments if provided */
-int php_embed2_req_init(TSRMLS_D);
+EMBED2_SAPI_API int php_embed2_req_init(TSRMLS_D);
 /* start request environment with it's own argc/argv variables */
-int php_embed2_req_init_with_args(int argc, char** argv, char* name TSRMLS_DC);
+EMBED2_SAPI_API int php_embed2_req_init_with_args(int argc, char** argv, char* name TSRMLS_DC);
 
 /* php code execution functions */
-int php_embed2_exec_fp  (FILE* fp, char* runname TSRMLS_DC);
-int php_embed2_exec_path(char* filepath TSRMLS_DC);
-int php_embed2_exec_zhnd(zend_file_handle* script TSRMLS_DC);
-int php_embed2_exec_str (char* script, char* runname TSRMLS_DC);
+EMBED2_SAPI_API int php_embed2_exec_fp  (FILE* fp, char* runname TSRMLS_DC);
+EMBED2_SAPI_API int php_embed2_exec_path(char* filepath TSRMLS_DC);
+EMBED2_SAPI_API int php_embed2_exec_zhnd(zend_file_handle* script TSRMLS_DC);
+EMBED2_SAPI_API int php_embed2_exec_str (char* script, char* runname TSRMLS_DC);
 
 /* wrapper around zend_eval_string call */
-int php_embed2_exec_cmd (char* command, zval* return_value, char* runname TSRMLS_DC);
+EMBED2_SAPI_API int php_embed2_exec_cmd (char* command, zval* return_value, char* runname TSRMLS_DC);
 
 /* shutdown request environment */
-void php_embed2_req_shutdown();
+EMBED2_SAPI_API void php_embed2_req_shutdown();
 
 /* shutdown PHP environment */
-void php_embed2_shutdown(void);
-void php_embed2_shutdown_ex(TSRMLS_D);
+EMBED2_SAPI_API void php_embed2_shutdown(void);
+EMBED2_SAPI_API void php_embed2_shutdown_ex(TSRMLS_D);
 
 /* functions used in output_smart_str modes... these functions can cross the php request environment */
-char* php_embed2_get_output(size_t* len TSRMLS_DC);
-char* php_embed2_get_log(size_t* len TSRMLS_DC);
+EMBED2_SAPI_API char* php_embed2_get_output(size_t* len TSRMLS_DC);
+EMBED2_SAPI_API char* php_embed2_get_log(size_t* len TSRMLS_DC);
 
 
 /* forward declarations of the embed2 modules */
-extern  sapi_module_struct php_embed2_module;
+extern EMBED_SAPI_API sapi_module_struct php_embed2_module;
 extern  zend_module_entry  embed2_module_entry;
 #define phpext_embed2_ptr  &embed2_module_entry
 
