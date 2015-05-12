@@ -37,6 +37,12 @@
 	#define EMBED2_SAPI_API
 #endif
 
+#ifndef PHP_WIN32
+	#define EMBED2_SAPI_API SAPI_API
+#else
+	#define EMBED2_SAPI_API
+#endif
+
 /**
  * EASY WRAPPER FUNCTIONS
  */
